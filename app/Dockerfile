@@ -1,4 +1,5 @@
-FROM python:3.8.6
+
+FROM python:stretch
 
 RUN pip install pyjwt
 RUN pip install flask
