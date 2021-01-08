@@ -87,9 +87,9 @@ Metadata:
           - EksClusterName
     ParameterLabels:
       GitHubUser:
-        default: Username
+        default: kmlawlor
       GitHubToken:
-        default: Access token
+        default: 17b9930c9e90bfe92548756423f5679b606f6a4a
       GitSourceRepo:
         default: Repository
       GitBranch:
@@ -97,9 +97,9 @@ Metadata:
       CodeBuildDockerImage:
         default: Docker image
       KubectlRoleName:
-        default: kubectl IAM role
+        default: UdacityFlaskDeployCBKubectlRole
       EksClusterName:
-        default: EKS cluster name
+        default: simple-jwt-api
 
 
 Resources:
@@ -114,6 +114,7 @@ Resources:
 
   CustomResourceLambda:
     Type: AWS::Lambda::Function
+    DeletionPolicy: Retain
     Properties:
       Code:
         ZipFile: |
@@ -166,6 +167,7 @@ Resources:
 
   CustomResourceLambdaExecutionRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
     Properties:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
@@ -192,6 +194,7 @@ Resources:
 
   KubectlAssumeRoleCustomResource:
     Type: Custom::CustomResource
+    DeletionPolicy: Retain
     Properties:
       ServiceToken: !GetAtt CustomResourceLambda.Arn
       KubectlRoleName: !Ref KubectlRoleName
@@ -202,6 +205,7 @@ Resources:
 
   CodePipelineServiceRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
     Properties:
       Path: /
       AssumeRolePolicyDocument:
@@ -238,6 +242,7 @@ Resources:
 
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
     Properties:
       Path: /
       AssumeRolePolicyDocument:
@@ -304,6 +309,7 @@ Resources:
 
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
+    DeletionPolicy: Retain
     Properties:
       Artifacts:
         Type: CODEPIPELINE
@@ -331,6 +337,7 @@ Resources:
 
   CodePipelineGitHub:
     Type: AWS::CodePipeline::Pipeline
+    DeletionPolicy: Retain
     Properties:
       RoleArn: !GetAtt CodePipelineServiceRole.Arn
       ArtifactStore:

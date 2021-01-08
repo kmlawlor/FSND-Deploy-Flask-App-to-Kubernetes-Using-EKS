@@ -1,5 +1,6 @@
 FROM python:stretch
 WORKDIR /app
+COPY . /app
 
 RUN pip install pyjwt
 RUN pip install flask
